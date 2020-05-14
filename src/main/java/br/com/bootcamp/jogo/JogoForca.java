@@ -7,6 +7,7 @@ public class JogoForca {
 
     private static String [] dica;
     private static int qtdLetras = 0;
+    private static int vida = 6;
 
     public static void main (String[] args){
         String palavraChave = null;
@@ -19,7 +20,7 @@ public class JogoForca {
                 palavraChave = listaPalavraDificil();
                 break;
             case "N":
-                palavraChave = listaPalavraNoraml();
+                palavraChave = listaPalavraNormal();
                 break;
             case "F":
                 palavraChave = listaPalavraFacil();
@@ -27,48 +28,63 @@ public class JogoForca {
             default:
                 palavraChave = "";
                 System.out.print("Nenhuma letra válda!!");
+                vida = 0;
                 break;
         }
 
-        System.out.println(montaDica(palavraChave.length()));
 
         String ListaEmString = "";
         montaDica(palavraChave.length());
+
         for(String s : dica){
             ListaEmString = ListaEmString + s;
         }
 
+        System.out.println(ListaEmString);
 
+        while (vida > 0) {
+            System.out.println("Qual letra você escolhe? -->");
+            String letraDigitada = in.next().toLowerCase();
+            String[] listaLetrasCorretas = palavraChave.split("");
 
-        System.out.println("Qual letra você escolhe? -->");
-        String letraDigitada = in.next().toLowerCase();
-
-        String[] listaLetrasCoreetas = palavraChave.split("");
-
-        int i = 0;
-        qtdLetras = palavraChave.length();
-        while(i < qtdLetras){
-            if (listaLetrasCoreetas[i].equals(letraDigitada)){
-                dica[i] = letraDigitada;
+            int i = 0;
+            int acertouLetra = 0;
+            qtdLetras = palavraChave.length();
+            while (i < qtdLetras) {
+                if (listaLetrasCorretas[i].equals(letraDigitada)) {
+                    dica[i] = letraDigitada;
+                    //* quero remover o item "__" que esta na posição i atual para colocar "letraDigitada no lugar"
+                    acertouLetra++;
+                }
+                i++;
             }
-            i++;
+            if (acertouLetra == 0) {
+                vida--;
+                System.out.println("Você errou a letra, perdeu um de vida, agora tem " + vida + " de vida");
+            }
+
+            String novaDica = "";
+
+            for (String s : dica) {
+                novaDica += s;
+            }
+
+            System.out.println(novaDica);
+
+            if (palavraChave.equals(novaDica)){
+                System.out.println("Voce ganhou!");
+                break;
+            }
 
         }
-        String novaDica = "";
 
-        for (String s : dica){
-            novaDica += s;
-        }
-
-        System.out.println(novaDica);
+        System.out.println("Fim de jogo!");
 
 
     }
 
     public static String[] montaDica (int qdtLetras){
-
         dica = new String[qdtLetras];
-
         for (int i = 0; i < dica.length; i++){
             dica[i] = " __ ";
         }
@@ -81,7 +97,7 @@ public class JogoForca {
         return palavras[random.nextInt(palavras.length)];
     }
 
-    public static String listaPalavraNoraml(){
+    public static String listaPalavraNormal(){
         String[] palavras  = {"laranja","melao","maca"};
         Random random = new Random();
         return palavras[random.nextInt(palavras.length)];
